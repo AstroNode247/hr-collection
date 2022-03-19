@@ -2,4 +2,5 @@
 *.xlsx
 
 /.idea
+/research_notebook/.ipynb_checkpoints/
 
