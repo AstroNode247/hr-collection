@@ -3,4 +3,5 @@
 
 /.idea
 /research_notebook/.ipynb_checkpoints/
+**/__pycache__/
 
