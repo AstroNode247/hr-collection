@@ -35,6 +35,34 @@ class PromotionData(BaseData, ITransformer):
         )
 
 
+class PromotionTestData(BaseData, ITransformer):
+    def __init__(self):
+        super().__init__()
+        self.data = pd.read_csv(f"{config.DATASETS_DIR}/{config.PROMOTION_TEST_DATA_FILE}")
+
+    def transform(self):
+        data_cols = ['IdEmploye', 'departement', 'region', 'nivDiplome', 'sexe', 'chaineRecrutement', 'nbrFormation',
+                     'age', 'noteAnneDerniere', 'anneeExperience', 'avoirPrix', 'noteMoyFormation']
+        self.data.columns = data_cols
+
+        self.data['departement'] = self.data['departement'].replace(
+            ['Sales & Marketing', 'Operations', 'Technology', 'Procurement', 'Analytics', 'Finance', 'HR', 'Legal',
+             'R&D'],
+            ['Ventes', 'Operations', 'Technologie', 'Approvisionnement', 'Analytiques', 'Finance',
+             'Ressources Humaines', 'Juridique', 'Recherche et Developpement'],
+        )
+
+        self.data['nivDiplome'] = self.data['nivDiplome'].replace(
+            ["Bachelor's", "Master's & above", "Below Secondary"],
+            ["License", "Master ou plus", "Secondaire ou moin"]
+        )
+
+        self.data['chaineRecrutement'] = self.data['chaineRecrutement'].replace(
+            ["other", "sourcing", "referred"],
+            ["autre", "sourcing", "recommendé"],
+        )
+
+
 class AttritionData(BaseData, ITransformer):
     def __init__(self):
         super().__init__()

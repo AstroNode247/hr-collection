@@ -2,7 +2,7 @@ from hr_collection.hr_pipeline.pipeline.base_pipeline import BaseData, LoadCSV, 
 
 
 class Pipeline:
-    def __init__(self, data):
+    def __init__(self, data=None):
         self.data = data
 
     def run(self):

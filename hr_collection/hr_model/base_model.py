@@ -1,10 +1,13 @@
 from abc import ABC, abstractmethod
 from collections import defaultdict
 
+import pandas as pd
 from sklearn.metrics import accuracy_score, recall_score, f1_score, precision_score
 from sklearn.model_selection import train_test_split
 
+from hr_collection.hr_model import hr_classification
 from hr_collection.hr_model.processor.provider import PickleProvider
+from hr_collection.hr_model.processor.validation import validate_input_promotion, validate_input_attrition
 
 
 class BaseModel(ABC):
@@ -34,6 +37,19 @@ class BaseModel(ABC):
     def predict(self):
         return self.pipeline.predict(self._X_test), self.pipeline.predict(self._X_train)
 
+    def make_prediction(self, input_data):
+        data = pd.DataFrame(input_data)
+        if isinstance(self, hr_classification.PromotionModel):
+            data = validate_input_promotion(data)
+        if isinstance(self, hr_classification.AttritionModel):
+            data = validate_input_attrition(data)
+        pickleModel = PickleProvider.get_model_provider()
+        model_pipeline = pickleModel.load(f"{self.model_dir['file']}.pkl", self.model_dir['directory'])
+
+        prediction = model_pipeline.predict(data)
+
+        return prediction
+
 
 class EvaluationMixin:
     def evaluate(self):
@@ -50,11 +66,11 @@ class EvaluationMixin:
 
 
 class PickleMixin:
-    pickleProvider = PickleProvider()
+    pickleProvider = PickleProvider.get_model_provider()
 
     def save_pickle(self, name):
         print("Save the model")
-        self.pickleProvider.save(name, self.model_dir, self.pipeline)
+        self.pickleProvider.save(name, self.model_dir['directory'], self.pipeline)
 
     def load_pickle(self, name):
         print("Load the pipeline")

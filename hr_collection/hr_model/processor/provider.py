@@ -20,6 +20,14 @@ class ModelProvider(ABC):
 
 
 class PickleProvider(ModelProvider):
+    __instance = None
+
+    @staticmethod
+    def get_model_provider():
+        if PickleProvider.__instance is None:
+            PickleProvider.__instance = PickleProvider()
+        return PickleProvider.__instance
+
     def load(self, file, model_dir):
         path = model_dir / file
         trained_model = joblib.load(filename=path)

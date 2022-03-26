@@ -1,5 +1,4 @@
 from hr_collection.hr_model.hr_classification import AttritionModel, PromotionModel
-from hr_collection.hr_model.processor.provider import PickleProvider
 
 if __name__ == "__main__":
     attritionModel = AttritionModel()

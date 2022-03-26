@@ -19,6 +19,11 @@ ATTRITION_CAT_FEATURES = ['departement', 'filiereEtude', 'sexe', 'roleTravail',
 ATTRITION_LABELED_FEATURES = ['voyageDeTravail']
 ATTRITION_SKEWED_FEATURES = ["revenuMensuel"]
 
+ATTRITION_CAT_NA_NOT_ALLOWED = \
+    [feature for feature in ATTRITION_FEATURES if feature not in ATTRITION_NUM_FEATURES]
+ATTRITION_NUM_NA_NOT_ALLOWED = \
+    [feature for feature in ATTRITION_FEATURES if feature not in ATTRITION_CAT_FEATURES]
+
 PROMOTION_TARGET = "estPromu"
 
 PROMOTION_FEATURES = ["departement", "region", "nivDiplome", "sexe", "chaineRecrutement",
@@ -31,6 +36,12 @@ PROMOTION_NUM_FEATURES = ["nbrFormation", "age", "noteAnneDerniere", "anneeExper
 
 PROMOTION_CAT_MISSING = ["nivDiplome"]
 PROMOTION_NUM_MISSING = ["noteAnneDerniere"]
+
+PROMOTION_NUM_NA_NOT_ALLOWED = \
+    [feature for feature in PROMOTION_FEATURES if feature not in PROMOTION_CAT_FEATURES + PROMOTION_NUM_MISSING]
+
+PROMOTION_CAT_NA_NOT_ALLOWED = \
+    [feature for feature in PROMOTION_FEATURES if feature not in PROMOTION_NUM_FEATURES + PROMOTION_CAT_MISSING]
 
 PROMOTION_FEATURES_SELECTED = ['nbrFormation', 'age', 'noteAnneDerniere', 'anneeExperience',
                              'avoirPrix', 'noteMoyFormation', 'departement_Analytiques',

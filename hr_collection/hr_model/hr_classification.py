@@ -3,7 +3,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder, MinMaxScaler
 
-from processor import preprocessor as pp
+from hr_collection.hr_model.processor import preprocessor as pp
 
 from hr_collection.config import config, features
 import pandas as pd
@@ -17,8 +17,13 @@ class AttritionModel(BaseModel, EvaluationMixin, PickleMixin):
         super().__init__()
         self._algorithm = RandomForestClassifier()
         self._features = {'features': features.ATTRITION_FEATURES,
-                         'target': features.ATTRITION_TARGET}
-        self.model_dir = config.ATTRITION_MODEL_DIR
+                          'target': features.ATTRITION_TARGET}
+        self.model_dir = {'directory': config.ATTRITION_MODEL_DIR,
+                          'file': config.ATTRITION_MODEL_NAME}
+
+    def _load_dataset(self):
+        self._data = pd.read_csv(f"{config.DATASETS_DIR}/{config.ATTRITION_DATA_FILE_FR}")
+        self._data = self._data.drop("Unnamed: 0", axis=1)
 
         numerical_transformer = Pipeline([
             ("numerical_imputer", pp.Imputer(value=0, variables=features.ATTRITION_NUM_FEATURES)),
@@ -38,13 +43,11 @@ class AttritionModel(BaseModel, EvaluationMixin, PickleMixin):
             ("model", self._algorithm)
         ])
 
-    def _load_dataset(self):
-        self._data = pd.read_csv(f"{config.DATASETS_DIR}/{config.ATTRITION_DATA_FILE_FR}")
-        self._data = self._data.drop("Unnamed: 0", axis=1)
         return self._data
 
     def train(self, test_size, random_state):
         self._data = self._load_dataset()
+
         target_encoder = pp.TargetTransformer(variables=features.ATTRITION_TARGET)
         self._data = target_encoder.transform(self._data)
 
@@ -62,10 +65,15 @@ class PromotionModel(BaseModel, EvaluationMixin, PickleMixin):
     def __init__(self):
         super().__init__()
         self._algorithm = AdaBoostClassifier(n_estimators=100)
-        self.model_dir = config.PROMOTION_MODEL_DIR
 
         self._features = {'features': features.PROMOTION_FEATURES,
-                         'target': features.PROMOTION_TARGET}
+                          'target': features.PROMOTION_TARGET}
+        self.model_dir = {'directory': config.PROMOTION_MODEL_DIR,
+                          'file': config.PROMOTION_MODEL_NAME}
+
+    def _load_dataset(self):
+        self._data = pd.read_csv(f"{config.DATASETS_DIR}/{config.PROMOTION_DATA_FILE_FR}")
+        self._data.drop('Unnamed: 0', axis=1)
 
         categorical_transformer = Pipeline([
             ("fill_na_nivDiplome", pp.Imputer('Missing', features.PROMOTION_CAT_MISSING)),
@@ -86,7 +94,4 @@ class PromotionModel(BaseModel, EvaluationMixin, PickleMixin):
             ("ada_boost", self._algorithm)
         ])
 
-    def _load_dataset(self):
-        self._data = pd.read_csv(f"{config.DATASETS_DIR}/{config.PROMOTION_DATA_FILE_FR}")
-        self._data.drop('Unnamed: 0', axis=1)
         return self._data
