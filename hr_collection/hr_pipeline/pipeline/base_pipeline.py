@@ -17,16 +17,20 @@ class ITransformer:
 
 class Loader:
     @abstractmethod
-    def load(self, data, output):
+    def load(self, data, output, conn=None):
         pass
 
 
 class LoadCSV(Loader):
-    def load(self, data, output):
+    def load(self, data, output, conn=None):
+        print("Save the data to csv file...")
         data.to_csv(output)
+        print("CSV file has been saved successfully")
 
 
 class LoadDB(Loader):
-    def load(self, table, data, conn):
+    def load(self, data, output, conn=None):
         engine = create_engine(conn)
-        data.to_sql(table, con=engine, if_exists="replace", index=False)
+        print("Load the data to DB...")
+        data.to_sql(output, con=engine, if_exists="replace", index=False)
+        print("Load is done successfully")

@@ -12,6 +12,6 @@ class Pipeline:
         loader = LoadCSV()
         loader.load(self.data.data, output)
 
-    def load_to_db(self, output):
+    def load_to_db(self, table_name, conn):
         loader = LoadDB()
-        loader.load("promotion", self.data.data, output)
+        loader.load(self.data.data, table_name, conn)

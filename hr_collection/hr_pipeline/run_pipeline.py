@@ -7,4 +7,4 @@ if __name__ == "__main__":
     promotion = PromotionData()
     pipeline = Pipeline(promotion)
     pipeline.run()
-    pipeline.load_to_db(config.POSTGRES_CONN)
+    pipeline.load_to_db("promotion", config.POSTGRES_CONN)

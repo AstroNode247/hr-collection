@@ -9,18 +9,16 @@ from hr_collection.config import config, features
 import pandas as pd
 
 from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
-from hr_collection.hr_model.base_model import BaseModel, EvaluationMixin
+from hr_collection.hr_model.base_model import BaseModel, EvaluationMixin, PickleMixin
 
 
-class AttritionModel(BaseModel, EvaluationMixin):
+class AttritionModel(BaseModel, EvaluationMixin, PickleMixin):
     def __init__(self):
         super().__init__()
         self._algorithm = RandomForestClassifier()
-        self._data = pd.read_csv(f"{config.DATASETS_DIR}/{config.ATTRITION_DATA_FILE_FR}")
-        self._data = self._data.drop("Unnamed: 0", axis=1)
-
         self._features = {'features': features.ATTRITION_FEATURES,
                          'target': features.ATTRITION_TARGET}
+        self.model_dir = config.ATTRITION_MODEL_DIR
 
         numerical_transformer = Pipeline([
             ("numerical_imputer", pp.Imputer(value=0, variables=features.ATTRITION_NUM_FEATURES)),
@@ -35,12 +33,18 @@ class AttritionModel(BaseModel, EvaluationMixin):
              features.ATTRITION_CAT_FEATURES)
         ])
 
-        self._pipeline = Pipeline([
+        self.pipeline = Pipeline([
             ("preprocessor", preprocessor),
             ("model", self._algorithm)
         ])
 
+    def _load_dataset(self):
+        self._data = pd.read_csv(f"{config.DATASETS_DIR}/{config.ATTRITION_DATA_FILE_FR}")
+        self._data = self._data.drop("Unnamed: 0", axis=1)
+        return self._data
+
     def train(self, test_size, random_state):
+        self._data = self._load_dataset()
         target_encoder = pp.TargetTransformer(variables=features.ATTRITION_TARGET)
         self._data = target_encoder.transform(self._data)
 
@@ -50,16 +54,15 @@ class AttritionModel(BaseModel, EvaluationMixin):
         )
 
         print("Train the model....")
-        self._pipeline.fit(self._X_train, self._y_train)
+        self.pipeline.fit(self._X_train, self._y_train)
         print("Training finished with success....")
 
 
-class PromotionModel(BaseModel, EvaluationMixin):
+class PromotionModel(BaseModel, EvaluationMixin, PickleMixin):
     def __init__(self):
         super().__init__()
         self._algorithm = AdaBoostClassifier(n_estimators=100)
-        self._data = pd.read_csv(f"{config.DATASETS_DIR}/{config.PROMOTION_DATA_FILE_FR}")
-        self._data.drop('Unnamed: 0', axis=1)
+        self.model_dir = config.PROMOTION_MODEL_DIR
 
         self._features = {'features': features.PROMOTION_FEATURES,
                          'target': features.PROMOTION_TARGET}
@@ -78,7 +81,12 @@ class PromotionModel(BaseModel, EvaluationMixin):
             ("numerical_transformer", numerical_transformer, features.PROMOTION_NUM_FEATURES)
         ])
 
-        self._pipeline = Pipeline([
+        self.pipeline = Pipeline([
             ("preprocessor", preprocessor),
             ("ada_boost", self._algorithm)
         ])
+
+    def _load_dataset(self):
+        self._data = pd.read_csv(f"{config.DATASETS_DIR}/{config.PROMOTION_DATA_FILE_FR}")
+        self._data.drop('Unnamed: 0', axis=1)
+        return self._data
