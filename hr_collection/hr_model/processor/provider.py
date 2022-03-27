@@ -1,6 +1,10 @@
 from abc import ABC, abstractmethod
 
 import joblib
+from hr_collection import __version__ as _version
+
+import logging
+_logger = logging.getLogger(__name__)
 
 
 class ModelProvider(ABC):
@@ -34,8 +38,8 @@ class PickleProvider(ModelProvider):
         return trained_model
 
     def save(self, name, model_dir, pipeline):
-        save_file_name = f"{name}.pkl"
+        save_file_name = f"{name}{_version}.pkl"
         save_path = model_dir / save_file_name
         self._remove_old_pipelines(files_to_keep=[save_file_name], model_dir=model_dir)
-        print("Save the model to a pickle")
         joblib.dump(pipeline, save_path)
+        _logger.info(f"save pipeline : {save_file_name}")

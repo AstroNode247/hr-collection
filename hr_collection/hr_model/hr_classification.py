@@ -2,6 +2,7 @@ from sklearn.compose import ColumnTransformer
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder, MinMaxScaler
+from sqlalchemy import create_engine
 
 from hr_collection.hr_model.processor import preprocessor as pp
 
@@ -10,6 +11,9 @@ import pandas as pd
 
 from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
 from hr_collection.hr_model.base_model import BaseModel, EvaluationMixin, PickleMixin
+
+import logging
+_logger = logging.getLogger(__name__)
 
 
 class AttritionModel(BaseModel, EvaluationMixin, PickleMixin):
@@ -22,8 +26,8 @@ class AttritionModel(BaseModel, EvaluationMixin, PickleMixin):
                           'file': config.ATTRITION_MODEL_NAME}
 
     def _load_dataset(self):
-        self._data = pd.read_csv(f"{config.DATASETS_DIR}/{config.ATTRITION_DATA_FILE_FR}")
-        self._data = self._data.drop("Unnamed: 0", axis=1)
+        conn = create_engine(f"{config.POSTGRES_CONN}")
+        self._data = pd.read_sql("SELECT * FROM attrition", conn)
 
         numerical_transformer = Pipeline([
             ("numerical_imputer", pp.Imputer(value=0, variables=features.ATTRITION_NUM_FEATURES)),
@@ -46,6 +50,7 @@ class AttritionModel(BaseModel, EvaluationMixin, PickleMixin):
         return self._data
 
     def train(self, test_size, random_state):
+
         self._data = self._load_dataset()
 
         target_encoder = pp.TargetTransformer(variables=features.ATTRITION_TARGET)
@@ -72,8 +77,8 @@ class PromotionModel(BaseModel, EvaluationMixin, PickleMixin):
                           'file': config.PROMOTION_MODEL_NAME}
 
     def _load_dataset(self):
-        self._data = pd.read_csv(f"{config.DATASETS_DIR}/{config.PROMOTION_DATA_FILE_FR}")
-        self._data.drop('Unnamed: 0', axis=1)
+        conn = create_engine(f"{config.POSTGRES_CONN}")
+        self._data = pd.read_sql(f"SELECT * FROM promotion", conn)
 
         categorical_transformer = Pipeline([
             ("fill_na_nivDiplome", pp.Imputer('Missing', features.PROMOTION_CAT_MISSING)),

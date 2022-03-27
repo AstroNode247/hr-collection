@@ -8,6 +8,10 @@ from sklearn.model_selection import train_test_split
 from hr_collection.hr_model import hr_classification
 from hr_collection.hr_model.processor.provider import PickleProvider
 from hr_collection.hr_model.processor.validation import validate_input_promotion, validate_input_attrition
+from hr_collection import __version__ as _version
+
+import logging
+_logger = logging.getLogger(__name__)
 
 
 class BaseModel(ABC):
@@ -44,11 +48,18 @@ class BaseModel(ABC):
         if isinstance(self, hr_classification.AttritionModel):
             data = validate_input_attrition(data)
         pickleModel = PickleProvider.get_model_provider()
-        model_pipeline = pickleModel.load(f"{self.model_dir['file']}.pkl", self.model_dir['directory'])
+        model_pipeline = pickleModel.load(f"{self.model_dir['file']}{_version}.pkl", self.model_dir['directory'])
 
         prediction = model_pipeline.predict(data)
+        results = {'predictions': prediction, 'version': _version}
 
-        return prediction
+        _logger.info(
+            f"Making prediction with model version : {_version} "
+            f"Inputs : {data}"
+            f" Predictions : {results}"
+        )
+
+        return results
 
 
 class EvaluationMixin:
@@ -69,7 +80,7 @@ class PickleMixin:
     pickleProvider = PickleProvider.get_model_provider()
 
     def save_pickle(self, name):
-        print("Save the model")
+        _logger.info(f"saving model version : {_version}")
         self.pickleProvider.save(name, self.model_dir['directory'], self.pipeline)
 
     def load_pickle(self, name):

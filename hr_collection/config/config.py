@@ -21,6 +21,8 @@ TRAINED_MODEL_DIR = PACKAGE_ROOT / "trained_model"
 
 ATTRITION_MODEL_DIR = TRAINED_MODEL_DIR / "attrition_trained_model"
 ATTRITION_MODEL_NAME = "attrition_classifier"
+ATTRITION_PIPELINE_FILE = f"{ATTRITION_MODEL_NAME}_out_v"
+
 PROMOTION_MODEL_DIR = TRAINED_MODEL_DIR / "promotion_trained_model"
 PROMOTION_MODEL_NAME = "promotion_classifier"
-
+PROMOTION_PIPELINE_FILE = f"{PROMOTION_MODEL_NAME}_out_v"
