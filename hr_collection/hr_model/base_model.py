@@ -24,11 +24,15 @@ class BaseModel(ABC):
         self.model_dir = None
 
     @abstractmethod
-    def _load_dataset(self):
+    def load_dataset(self):
+        pass
+
+    @abstractmethod
+    def _get_data(self):
         pass
 
     def train(self, test_size, random_state):
-        self._data = self._load_dataset()
+        self._data = self._get_data()
         self._X_train, self._X_test, self._y_train, self._y_test = train_test_split(
             self._data[self._features['features']], self._data[self._features['target']],
             test_size=test_size, random_state=random_state
