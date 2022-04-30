@@ -11,3 +11,4 @@
 /build/
 /dist/
 /hr_collection.egg-info/
+**/logs/
