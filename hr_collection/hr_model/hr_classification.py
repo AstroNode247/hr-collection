@@ -10,14 +10,13 @@ from hr_collection.config import config, features
 import pandas as pd
 
 from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
-# from hr_collection.hr_model.base_model import BaseModel, EvaluationMixin, PickleMixin
-import base_model as bm
+from hr_collection.hr_model.base_model import BaseModel, EvaluationMixin, PickleMixin
 
 import logging
 _logger = logging.getLogger(__name__)
 
 
-class AttritionModel(bm.BaseModel, bm.EvaluationMixin, bm.PickleMixin):
+class AttritionModel(BaseModel, EvaluationMixin, PickleMixin):
     def __init__(self):
         super().__init__()
         self._algorithm = RandomForestClassifier()
@@ -71,7 +70,7 @@ class AttritionModel(bm.BaseModel, bm.EvaluationMixin, bm.PickleMixin):
         print("Training finished with success....")
 
 
-class PromotionModel(bm.BaseModel, bm.EvaluationMixin, bm.PickleMixin):
+class PromotionModel(BaseModel, EvaluationMixin, PickleMixin):
     def __init__(self):
         super().__init__()
         self._algorithm = AdaBoostClassifier(n_estimators=100)

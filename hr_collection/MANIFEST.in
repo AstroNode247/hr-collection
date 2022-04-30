@@ -7,7 +7,8 @@ recursive-include ./hr_pipeline/*
 
 include datasets/employee_promo_train.csv
 include datasets/employee_promo_test.csv
-include datasets/general_data.csv
+include datasets/general_data_fr.csv
+include datasets/general_data_fr_test.csv
 include trained_models/attrition_trained_model/*.pkl
 include trained_models/promotion_trained_model/*.pkl
 include ./VERSION

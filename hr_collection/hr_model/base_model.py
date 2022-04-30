@@ -51,6 +51,7 @@ class BaseModel(ABC):
             data = validate_input_promotion(data)
         if isinstance(self, hr_classification.AttritionModel):
             data = validate_input_attrition(data)
+            
         pickleModel = PickleProvider.get_model_provider()
         model_pipeline = pickleModel.load(f"{self.model_dir['file']}{_version}.pkl", self.model_dir['directory'])
 
