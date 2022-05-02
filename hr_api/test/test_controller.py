@@ -4,7 +4,9 @@ import math
 
 from hr_collection.config import config
 from hr_collection.hr_model.hr_classification import AttritionModel
-from hr_collection import __version__ as _version
+from hr_collection import __version__ as api_version
+
+from api import __version__ as _version
 
 def test_health_endpoint_returns_200(flask_test_client):
     # When
@@ -12,6 +14,16 @@ def test_health_endpoint_returns_200(flask_test_client):
 
     # Then
     assert response.status_code == 200
+
+def test_version_endpoint_returns_version(flask_test_client):
+    # When
+    response = flask_test_client.get('/version')
+
+    # Then
+    assert response.status_code == 200
+    response_json = json.loads(response.data)
+    assert response_json['model_version'] == _version
+    assert response_json['api_version'] == api_version
 
 
 def test_prediction_endpoint_returns_attrition_prediction(flask_test_client):
@@ -30,7 +42,7 @@ def test_prediction_endpoint_returns_attrition_prediction(flask_test_client):
     response_json = json.loads(response.data)
     prediction = response_json['predictions']
     response_version = response_json['version']
-    assert response_version == _version
+    assert response_version == api_version
 
 def test_prediction_endpoint_returns_promotion_prediction(flask_test_client):
     # Given
@@ -48,4 +60,4 @@ def test_prediction_endpoint_returns_promotion_prediction(flask_test_client):
     response_json = json.loads(response.data)
     prediction = response_json['predictions']
     response_version = response_json['version']
-    assert response_version == _version
+    assert response_version == api_version
