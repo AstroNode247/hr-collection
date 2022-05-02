@@ -14,6 +14,7 @@ PROMOTION_TEST_DATA_FILE = "employee_promo_test.csv"
 
 ATTRITION_DATA_FILE = "general_data.csv"
 ATTRITION_DATA_FILE_FR = "generaL_data_fr.csv"
+ATTRITION_TEST_DATA_FILE = "general_data_fr_test.csv"
 
 POSTGRES_CONN = "postgresql://postgres:%s@localhost:5432/hr_collection" % quote("adm!@#")
 

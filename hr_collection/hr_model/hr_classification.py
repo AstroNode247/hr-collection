@@ -25,7 +25,11 @@ class AttritionModel(BaseModel, EvaluationMixin, PickleMixin):
         self.model_dir = {'directory': config.ATTRITION_MODEL_DIR,
                           'file': config.ATTRITION_MODEL_NAME}
 
-    def _load_dataset(self):
+    def load_dataset(self):
+        conn = create_engine(f"{config.POSTGRES_CONN}")
+        return pd.read_sql("SELECT * FROM attrition", conn)
+
+    def _get_data(self):
         conn = create_engine(f"{config.POSTGRES_CONN}")
         self._data = pd.read_sql("SELECT * FROM attrition", conn)
 
@@ -51,7 +55,7 @@ class AttritionModel(BaseModel, EvaluationMixin, PickleMixin):
 
     def train(self, test_size, random_state):
 
-        self._data = self._load_dataset()
+        self._data = self._get_data()
 
         target_encoder = pp.TargetTransformer(variables=features.ATTRITION_TARGET)
         self._data = target_encoder.transform(self._data)
@@ -76,7 +80,11 @@ class PromotionModel(BaseModel, EvaluationMixin, PickleMixin):
         self.model_dir = {'directory': config.PROMOTION_MODEL_DIR,
                           'file': config.PROMOTION_MODEL_NAME}
 
-    def _load_dataset(self):
+    def load_dataset(self):
+        conn = create_engine(f"{config.POSTGRES_CONN}")
+        return pd.read_sql("SELECT * FROM promotion", conn)
+
+    def _get_data(self):
         conn = create_engine(f"{config.POSTGRES_CONN}")
         self._data = pd.read_sql(f"SELECT * FROM promotion", conn)
 

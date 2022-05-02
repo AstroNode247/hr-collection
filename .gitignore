@@ -3,6 +3,12 @@
 *.pkl
 
 /.idea
+/.vscode
 /research_notebook/.ipynb_checkpoints/
 **/__pycache__/
+/env/
 
+/build/
+/dist/
+/hr_collection.egg-info/
+**/logs/

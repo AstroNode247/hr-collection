@@ -1,0 +1,20 @@
+include *.txt
+include *.md
+include *.cfg
+include *.pkl
+recursive-include ./hr_model/*
+recursive-include ./hr_pipeline/*
+
+include datasets/employee_promo_train.csv
+include datasets/employee_promo_test.csv
+include datasets/general_data_fr.csv
+include datasets/general_data_fr_test.csv
+include trained_models/attrition_trained_model/*.pkl
+include trained_models/promotion_trained_model/*.pkl
+include ./VERSION
+
+include ./requirements.txt
+exclude *.log
+
+recursive-exclude * __pycache__
+recursive-exclude * *.py[co]

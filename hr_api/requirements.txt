@@ -1,0 +1,6 @@
+# api
+flask>=2.1.2,<2.2.0
+marshmallow>=3.15.0,<3.16.0
+
+# local hr_collection package
+-e "E:\Projects\Python\hr_collection\hr_collection"

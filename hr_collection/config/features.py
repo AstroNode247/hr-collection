@@ -16,13 +16,16 @@ ATTRITION_NUM_FEATURES = ['age', 'distanceEntreMaison', 'nivEtudeSup', 'nombreEm
 ATTRITION_CAT_FEATURES = ['departement', 'filiereEtude', 'sexe', 'roleTravail',
                           'etatMatrimonial', 'plusDe18']
 
+ATTRITION_NUM_MISSING = ['nbrAncienEntreprise', 'anneeExperience']
+ATTRITION_CAT_MISSING = []
+
 ATTRITION_LABELED_FEATURES = ['voyageDeTravail']
 ATTRITION_SKEWED_FEATURES = ["revenuMensuel"]
 
 ATTRITION_CAT_NA_NOT_ALLOWED = \
-    [feature for feature in ATTRITION_FEATURES if feature not in ATTRITION_NUM_FEATURES]
+    [feature for feature in ATTRITION_FEATURES if feature not in ATTRITION_NUM_FEATURES + ATTRITION_CAT_MISSING]
 ATTRITION_NUM_NA_NOT_ALLOWED = \
-    [feature for feature in ATTRITION_FEATURES if feature not in ATTRITION_CAT_FEATURES]
+    [feature for feature in ATTRITION_FEATURES if feature not in ATTRITION_CAT_FEATURES + ATTRITION_NUM_MISSING]
 
 PROMOTION_TARGET = "estPromu"
 
