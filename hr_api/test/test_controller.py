@@ -3,7 +3,7 @@ import json
 import math
 
 from hr_collection.config import config
-from hr_collection.hr_model.hr_classification import AttritionModel
+from hr_collection.hr_model.hr_classification import AttritionModel, PromotionModel
 from hr_collection import __version__ as api_version
 
 from api import __version__ as _version
@@ -28,8 +28,7 @@ def test_version_endpoint_returns_version(flask_test_client):
 
 def test_prediction_endpoint_returns_attrition_prediction(flask_test_client):
     # Given
-    test_data = pd.read_csv(f"{config.DATASETS_DIR}/{config.ATTRITION_TEST_DATA_FILE}")
-    test_data = test_data.drop("Unnamed: 0", axis=1)
+    test_data = AttritionModel().load_dataset()
     post_json = test_data[0:1].to_json(orient='records')
     post_json = json.loads(post_json)
 
@@ -46,8 +45,7 @@ def test_prediction_endpoint_returns_attrition_prediction(flask_test_client):
 
 def test_prediction_endpoint_returns_promotion_prediction(flask_test_client):
     # Given
-    test_data = pd.read_csv(f"{config.DATASETS_DIR}/{config.PROMOTION_TEST_DATA_FILE_FR}")
-    test_data = test_data.drop("Unnamed: 0", axis=1)
+    test_data = PromotionModel().load_dataset()
     post_json = test_data[0:1].to_json(orient='records')
     post_json = json.loads(post_json)
 

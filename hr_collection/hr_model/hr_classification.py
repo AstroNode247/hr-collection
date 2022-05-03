@@ -27,11 +27,11 @@ class AttritionModel(BaseModel, EvaluationMixin, PickleMixin):
 
     def load_dataset(self):
         conn = create_engine(f"{config.POSTGRES_CONN}")
-        return pd.read_sql("SELECT * FROM attrition", conn)
+        return pd.read_sql("SELECT * FROM attrition WHERE attrition IS NULL", conn)
 
     def _get_data(self):
         conn = create_engine(f"{config.POSTGRES_CONN}")
-        self._data = pd.read_sql("SELECT * FROM attrition", conn)
+        self._data = pd.read_sql("SELECT * FROM attrition WHERE attrition IS NOT NULL", conn)
 
         numerical_transformer = Pipeline([
             ("numerical_imputer", pp.Imputer(value=0, variables=features.ATTRITION_NUM_FEATURES)),
@@ -82,11 +82,11 @@ class PromotionModel(BaseModel, EvaluationMixin, PickleMixin):
 
     def load_dataset(self):
         conn = create_engine(f"{config.POSTGRES_CONN}")
-        return pd.read_sql("SELECT * FROM promotion", conn)
+        return pd.read_sql("SELECT * FROM promotion WHERE \"estPromu\" is NULL", conn)
 
     def _get_data(self):
         conn = create_engine(f"{config.POSTGRES_CONN}")
-        self._data = pd.read_sql(f"SELECT * FROM promotion", conn)
+        self._data = pd.read_sql(f"SELECT * FROM promotion WHERE \"estPromu\" is NOT NULL", conn)
 
         categorical_transformer = Pipeline([
             ("fill_na_nivDiplome", pp.Imputer('Missing', features.PROMOTION_CAT_MISSING)),

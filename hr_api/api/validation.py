@@ -24,7 +24,7 @@ class AttritionDataRequestSchema(Schema):
     nivEtudeSup = fields.Integer(allow_none=True)
     filiereEtude = fields.Str(allow_none=True)
     nombreEmploye = fields.Integer(allow_none=True)
-    idEmploye = fields.Integer(allow_none=True)
+    IdEmploye = fields.Integer(allow_none=True)
     sexe = fields.Str(allow_none=True)
     nivTravail = fields.Integer(allow_none=True) 
     roleTravail = fields.Str(allow_none=True)
@@ -40,6 +40,7 @@ class AttritionDataRequestSchema(Schema):
     anneeAncienete = fields.Integer(allow_none=True) 
     anneeDernierPromotion = fields.Integer(allow_none=True) 
     anneeAvecManager = fields.Integer(allow_none=True) 
+    attrition = fields.Str(allow_none=True)
 
 class PromotionDataRequestSchema(Schema):
     IdEmploye = fields.Integer()
@@ -54,7 +55,7 @@ class PromotionDataRequestSchema(Schema):
     anneeExperience = fields.Integer()
     avoirPrix = fields.Integer()
     noteMoyFormation = fields.Integer()
-    estPromu = fields.Integer()
+    estPromu = fields.Integer(allow_none=True)
 
 
 def _filter_error_rows(errors: dict,

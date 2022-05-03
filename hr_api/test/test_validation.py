@@ -2,10 +2,10 @@ import json
 import pandas as pd
 
 from hr_collection.config import config
+from hr_collection.hr_model.hr_classification import AttritionModel, PromotionModel
 
 def test_prediction_endpoint_attrition_validation_200(flask_test_client):
-    test_data = pd.read_csv(f"{config.DATASETS_DIR}/{config.ATTRITION_TEST_DATA_FILE}")
-    test_data = test_data.drop("Unnamed: 0", axis=1)
+    test_data = AttritionModel().load_dataset()
     post_json = test_data.to_json(orient='records')
     post_json = json.loads(post_json)
 
@@ -22,8 +22,7 @@ def test_prediction_endpoint_attrition_validation_200(flask_test_client):
         response_json.get('errors')) == len(test_data)
 
 def test_prediction_endpoint_promotion_validation_200(flask_test_client):
-    test_data = pd.read_csv(f"{config.DATASETS_DIR}/{config.PROMOTION_TEST_DATA_FILE_FR}")
-    test_data = test_data.drop("Unnamed: 0", axis=1)
+    test_data = PromotionModel().load_dataset()
     post_json = test_data.to_json(orient='records')
     post_json = json.loads(post_json)
 

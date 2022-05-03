@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 import sqlite3
 
@@ -12,7 +13,7 @@ class PromotionData(BaseData, ITransformer):
         self.data = pd.read_csv(f"{config.DATASETS_DIR}/{config.PROMOTION_DATA_FILE}")
 
     def transform(self):
-        data_cols = ['idEmploye', 'departement', 'region', 'nivDiplome', 'sexe', 'chaineRecrutement', 'nbrFormation',
+        data_cols = ['IdEmploye', 'departement', 'region', 'nivDiplome', 'sexe', 'chaineRecrutement', 'nbrFormation',
                      'age', 'noteAnneDerniere', 'anneeExperience', 'avoirPrix', 'noteMoyFormation',
                      'estPromu']
         self.data.columns = data_cols
@@ -34,6 +35,10 @@ class PromotionData(BaseData, ITransformer):
             ["autre", "sourcing", "recommendé"],
         )
 
+        test_data = pd.read_csv(f"{config.DATASETS_DIR}/{config.PROMOTION_TEST_DATA_FILE_FR}")
+        test_data = test_data.drop("Unnamed: 0", axis=1)
+        self.data = pd.concat([self.data, test_data])
+
 
 class PromotionTestData(BaseData, ITransformer):
     def __init__(self):
@@ -41,7 +46,7 @@ class PromotionTestData(BaseData, ITransformer):
         self.data = pd.read_csv(f"{config.DATASETS_DIR}/{config.PROMOTION_TEST_DATA_FILE}")
 
     def transform(self):
-        data_cols = ['IdEmploye', 'departement', 'region', 'nivDiplome', 'sexe', 'chaineRecrutement', 'nbrFormation',
+        data_cols = ['idEmploye', 'departement', 'region', 'nivDiplome', 'sexe', 'chaineRecrutement', 'nbrFormation',
                      'age', 'noteAnneDerniere', 'anneeExperience', 'avoirPrix', 'noteMoyFormation']
         self.data.columns = data_cols
 
@@ -71,7 +76,7 @@ class AttritionData(BaseData, ITransformer):
     def transform(self):
         french_cols = ['age', 'attrition', 'voyageDeTravail', 'departement', 'distanceEntreMaison', 'nivEtudeSup',
                        'filiereEtude',
-                       'nombreEmploye', 'idEmploye', 'sexe', 'nivTravail', 'roleTravail', 'etatMatrimonial',
+                       'nombreEmploye', 'IdEmploye', 'sexe', 'nivTravail', 'roleTravail', 'etatMatrimonial',
                        'revenuMensuel',
                        'nbrAncienEntreprise', 'plusDe18', 'pourcAugmentationDeSalaire', 'heureStandard',
                        'nivCompensation',
@@ -111,3 +116,7 @@ class AttritionData(BaseData, ITransformer):
                      ['Marrié', 'Célibataire', 'Divorcé'])
 
         self.data['plusDe18'] = self.data['plusDe18'].replace('Y', 'O')
+        
+        rand_idx = np.random.randint(0, self.data.shape[0], int(self.data.shape[0]*.2))
+        self.data.loc[rand_idx, 'attrition'] = np.nan
+        print(self.data.loc[rand_idx, 'attrition'])
