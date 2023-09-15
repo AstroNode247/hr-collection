@@ -16,7 +16,7 @@ ATTRITION_DATA_FILE = "general_data.csv"
 ATTRITION_DATA_FILE_FR = "generaL_data_fr.csv"
 ATTRITION_TEST_DATA_FILE = "general_data_fr_test.csv"
 
-POSTGRES_CONN = "postgresql://postgres:%s@localhost:5432/hr_collection" % quote("adm!@#")
+POSTGRES_CONN = "postgresql+psycopg2://postgres:%s@localhost:5432/hr_collection" % quote("andry")
 
 TRAINED_MODEL_DIR = PACKAGE_ROOT / "trained_model"
 

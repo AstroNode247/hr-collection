@@ -1,7 +1,7 @@
 import pytest
 
-from api.app import create_app
-from api.config import TestingConfig
+from hr_api.api.app import create_app
+from hr_api.api.config import TestingConfig
 
 
 @pytest.fixture

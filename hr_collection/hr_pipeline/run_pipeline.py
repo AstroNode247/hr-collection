@@ -30,5 +30,5 @@ def promotion_test_pipeline():
 
 if __name__ == "__main__":
     pipeline = Pipeline()
-    # promotion_pipeline()
-    attrition_pipeline()
+    promotion_pipeline()
+    # attrition_pipeline()

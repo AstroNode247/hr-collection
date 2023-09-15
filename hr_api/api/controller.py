@@ -1,10 +1,10 @@
-from api.validation import validate_inputs
+from hr_api.api.validation import validate_inputs
 from flask import Blueprint, request, jsonify
-from api.config import get_logger
+from hr_api.api.config import get_logger
 from hr_collection.hr_model.hr_classification import AttritionModel, PromotionModel
 from hr_collection import __version__ as api_version
 
-from api import __version__ as _version
+from hr_api.api import __version__ as _version
 
 _logger = get_logger(logger_name=__name__)
 

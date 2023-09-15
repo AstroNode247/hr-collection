@@ -6,7 +6,7 @@ from hr_collection.config import config
 from hr_collection.hr_model.hr_classification import AttritionModel, PromotionModel
 from hr_collection import __version__ as api_version
 
-from api import __version__ as _version
+from hr_api.api import __version__ as _version
 
 def test_health_endpoint_returns_200(flask_test_client):
     # When
